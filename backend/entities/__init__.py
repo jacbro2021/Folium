@@ -1,0 +1,1 @@
+"""Entity module for creating database tables"""
