@@ -24,3 +24,5 @@ class User(UserIdentity, BaseModel):
     first_name: str = ""
     last_name: str = ""
     email: str = ""
+    created_at: str = ""
+    key: str = ""

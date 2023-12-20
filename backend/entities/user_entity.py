@@ -4,11 +4,11 @@ from typing import Self
 from .entity_base import EntityBase
 
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, Date
 
 from ..models.user import User
 
-class user_entity(EntityBase):
+class UserEntity(EntityBase):
     """Serves as the database model schema defining the shape of the `User` table"""
 
     # Name for the user table in the db.
@@ -22,6 +22,10 @@ class user_entity(EntityBase):
     last_name: Mapped[String] = mapped_column(String, nullable=False)
     # Column to store the users email 
     email: Mapped[String] = mapped_column(String, nullable=False)
+    # Column to store when the user was created
+    created_at: Mapped[str] = mapped_column(String, nullable=False)
+    # key for the user to access their own information
+    key: Mapped[str] = mapped_column(String, nullable=False)
     
     @classmethod
     def from_model(cls, user: User) -> Self:
@@ -39,6 +43,8 @@ class user_entity(EntityBase):
             first_name = user.first_name,
             last_name = user.last_name,
             email = user.email,
+            created_at = user.created_at,
+            key = user.key,
         )
 
     def to_model(self) -> User:
@@ -53,6 +59,8 @@ class user_entity(EntityBase):
             first_name=self.first_name,
             last_name=self.last_name,
             email=self.email,
+            created_at=self.created_at,
+            key = self.key,
         )
 
     def update(self, user: User) -> None:
@@ -62,7 +70,7 @@ class user_entity(EntityBase):
         Returns:
             None
         """
-        self.id = user.id
         self.first_name = user.first_name
         self.last_name = user.last_name
         self.email = user.email
+
