@@ -19,7 +19,7 @@ class UserService:
                  session: Session = Depends(db_session)):
         self._session = session
 
-    def create_user(self, first_name: str, last_name: str, email: str) -> str:
+    def create_user(self, first_name: str = "", last_name: str = "", email: str = "") -> str:
         """
         Creates a new user in the database
         
@@ -48,7 +48,7 @@ class UserService:
             raise DuplicateUserException(entity=entity)
         
         # Create the date string
-        date = datetime.now
+        date = datetime.now()
         date_string = date.strftime("%Y-%m-%d %H:%M:%S")
 
         # Create the key for the user
@@ -87,7 +87,7 @@ class UserService:
         
         # Get the user entity from the database.
         query = select(UserEntity).where(UserEntity.key == key)
-        entity: UserEntity | None = self._session.query(query)
+        entity: UserEntity | None = self._session.scalar(query)
 
         if entity:
             # return the model representation of the user.
@@ -110,14 +110,14 @@ class UserService:
 
         # Get the entity to be updated from the database.
         query = select(UserEntity).where(UserEntity.key == key)
-        entity: UserEntity | None = self._session.query(query)
+        entity: UserEntity | None = self._session.scalar(query)
 
         if entity:
             # Update the user and commit the changes to the database.
-            updated_entity: UserEntity = entity.update(user=user)
+            entity.update(user=user)
             self._session.commit()
 
-            return updated_entity.to_model()
+            return entity.to_model()
         else:
             raise UserNotFoundException()
         
@@ -137,7 +137,7 @@ class UserService:
 
         # Get the entity to be deleted from the database.
         query = select(UserEntity).where(UserEntity.key == key)
-        entity: UserEntity | None = self._session.query(query)
+        entity: UserEntity | None = self._session.scalar(query)
 
         if entity:
             # Delete the user from the database.
