@@ -11,9 +11,9 @@ class DuplicateUserException(Exception):
 
 class InvalidCredentialsUserException(Exception):
     """Exception to be thrown when a user provides invalid credentials when creating a user"""
-    def __init__(self):
+    def __init__(self, msg: str = "Invalid credentials. No whitespace allowed."):
         super().__init__(
-            "Invalid credentials. No whitespace allowed."
+            msg
         )
 
 class UserNotFoundException(Exception):

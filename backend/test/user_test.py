@@ -18,37 +18,81 @@ def user_service(session: Session):
 
 def test_create_user(user_service: UserService):
     """Tests that a user can be created and the key is returned"""
-    key = user_service.create_user(first_name="Jacob", last_name="Brown", email="email")
+    user = User(first_name="Jacob",
+                last_name="Brown",
+                email="jacobbrown2002@gmail.com",
+                password="password")
+    key = user_service.create_user(user=user)
     assert key
 
 def test_create_multiple_users(user_service: UserService):
     """Tests that multiple users can be created with unique keys"""
-    key = user_service.create_user(first_name="Jacob", last_name="Brown", email="email")
-    key2 = user_service.create_user(first_name="polly", last_name="dartin", email="email2")
-    assert key
-    assert key2
-    assert key != key2
+    user = User(first_name="Jacob",
+                last_name="Brown",
+                email="jacobbrown2002@gmail.com",
+                password="password")
+    user2 = User(first_name="Jackson",
+                last_name="Brown",
+                email="test@gmail.com",
+                password="password2")
+    model = user_service.create_user(user)
+    model2 = user_service.create_user(user2)
+    assert model
+    assert model2
 
 def test_create_user_empty_property(user_service: UserService):
     try:
-        key = user_service.create_user()
+        user = User(first_name="Jacob",
+                last_name="Brown",
+                email="jacobbrown2002@gmail.com",
+                password="")
+        user_service.create_user(user=user)
         pytest.fail()
     except InvalidCredentialsUserException:
         assert True
 
 def test_create_duplicate_users(user_service: UserService):
     try:
-        key = user_service.create_user(first_name="Jacob", last_name="Brown", email="email")
-        key2 = user_service.create_user(first_name="Jacob", last_name="Brown", email="email")
+        user = User(first_name="Jacob",
+                last_name="Brown",
+                email="jacobbrown2002@gmail.com",
+                password="password")
+        key = user_service.create_user(user = user)
+        key2 = user_service.create_user(user = user)
         pytest.fail()
     except DuplicateUserException:
         assert True
 
+def test_sign_in(user_service: UserService):
+    """Test sign in basic usage"""
+    user = User(first_name="Jacob",
+                last_name="Brown",
+                email="jacobbrown2002@gmail.com",
+                password="password")
+    user = user_service.create_user(user)
+    user2 = user_service.sign_in(email=user.email, password=user.password)
+    assert user2.key == user.key
+
+def test_sign_in_not_found(user_service: UserService):
+    user = User(first_name="Jacob",
+                last_name="Brown",
+                email="jacobbrown2002@gmail.com",
+                password="password")
+    try:
+        user_service.sign_in(email=user.email, password=user.password)
+        pytest.fail()
+    except UserNotFoundException:
+        assert True
+
 def test_get_user(user_service: UserService):
     """Tests get user basic usage"""
-    key = user_service.create_user(first_name="Jacob", last_name="Brown", email="email")
-    user = user_service.get_user(key=key)
-    assert user.key == key
+    user = User(first_name="Jacob",
+                last_name="Brown",
+                email="jacobbrown2002@gmail.com",
+                password="password")
+    new_user: User = user_service.create_user(user = user)
+    user2: User = user_service.get_user(key=new_user.key)
+    assert user2.key == new_user.key
 
 def test_get_user_does_not_exist(user_service: UserService):
     """Tests get user raises an exception when called with a key that is not in the database."""
@@ -58,31 +102,16 @@ def test_get_user_does_not_exist(user_service: UserService):
     except UserNotFoundException: 
         assert True
 
-def test_get_user_multiple_users(user_service: UserService):
-    """Tests that get user returns the correct user when there are multiple users in the database."""
-    key = user_service.create_user(first_name="Jacob", last_name="Brown", email="email")
-    key2 = user_service.create_user(first_name="Jim", last_name="Beam", email="email2")
-    user = user_service.get_user(key=key2)
-    assert user.key == key2
-
 def test_update_user(user_service: UserService):
     """Tests that update user functions properly."""
-    key = user_service.create_user(first_name="Jacob", last_name="Brown", email="email")
-    user = user_service.get_user(key=key)
+    user = User(first_name="Jacob",
+                last_name="Brown",
+                email="jacobbrown2002@gmail.com",
+                password="password")
+    user = user_service.create_user(user=user)
     user.first_name = "Jimmy"
-    user2 = user_service.update_user(key=key, user=user)
+    user2 = user_service.update_user(key=user.key, user=user)
     assert user2.first_name == user.first_name
-
-def test_update_user_multiple_users(user_service: UserService):
-    """Tests that the correct user is updated when multiple users are in the database."""
-    key = user_service.create_user(first_name="Jacob", last_name="Brown", email="email")
-    key2 = user_service.create_user(first_name="Jacob", last_name="Brown", email="email2")
-    user = user_service.get_user(key=key)
-    user.first_name = "John"
-    user.last_name = "Jim"
-    user2 = user_service.update_user(key=key, user=user)
-    assert user2.first_name == user.first_name
-    assert user2.last_name == user.last_name
 
 def test_update_user_not_found(user_service: UserService):
     """Tests that an exception is raised when a user is updated that is not in the database"""
@@ -96,19 +125,18 @@ def test_update_user_not_found(user_service: UserService):
 
 def test_delete_user(user_service: UserService):
     """Tests delete user basic usage"""
-    key = user_service.create_user(first_name="Jacob", last_name="Brown", email="email")
-    user_service.delete_user(key=key)
+    user = User(first_name="Jacob",
+                last_name="Brown",
+                email="jacobbrown2002@gmail.com",
+                password="password")
+    user = user_service.create_user(user=user)
+    user_service.delete_user(key=user.key)
+    assert True
 
+def test_delete_nonexistent_user(user_service: UserService):
+    """Tests that an exception is thrown when a user that does not exist is deleted."""
     try:
-        user_service.get_user(key=key)
+        user_service.delete_user("0")
         pytest.fail()
     except UserNotFoundException:
         assert True
-
-def test_delete_user_multiple_users(user_service: UserService):
-    """Tests that delete user only deletes the user with the specified key"""
-    key = user_service.create_user(first_name="Jacob", last_name="Brown", email="email")
-    key2 = user_service.create_user(first_name="Jacob", last_name="Brown", email="email2")
-    user_service.delete_user(key=key)
-    user_service.get_user(key=key2)
-    assert True

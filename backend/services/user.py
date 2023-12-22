@@ -16,10 +16,11 @@ class UserService:
     """User service to perform actions on the user table"""
 
     def __init__(self,
-                 session: Session = Depends(db_session)):
+                 session: Session = Depends(db_session)
+    ):
         self._session = session
 
-    def create_user(self, first_name: str = "", last_name: str = "", email: str = "") -> str:
+    def create_user(self, user: User) -> User:
         """
         Creates a new user in the database
         
@@ -35,13 +36,19 @@ class UserService:
             InvalidCredentialsException: If the input is improperly formatted or empty.
             DuplicateUserException: If the user is already in the database.
         """
+        strip_first = user.first_name.replace(" ", "")
+        strip_last = user.last_name.replace(" ", "")
+        strip_email = user.email.replace(" ", "")
+        strip_password = user.password.replace(" ", "")
 
-        # Validate that the user has entered information for the name and email fields
-        if first_name.strip() == "" or last_name.strip() == "" or email.strip == "":
+        if strip_password != user.password:
+            raise InvalidCredentialsUserException(msg="Spaces not allowed in password")
+        elif strip_first != user.first_name or strip_last != user.last_name or strip_email != user.email:
             raise InvalidCredentialsUserException()
+        elif user.first_name == "" or user.last_name == "" or user.email == "" or user.password == "":
+            raise InvalidCredentialsUserException("All fields must be filled out.")
         
-        query = select(UserEntity).where(UserEntity.email == email.strip())
-        entity: UserEntity | None = self._session.scalar(query)
+        entity = self._session.query(UserEntity).filter(UserEntity.email == user.email).one_or_none()
         
         # Check for duplicate user
         if entity:
@@ -52,16 +59,18 @@ class UserService:
         date_string = date.strftime("%Y-%m-%d %H:%M:%S")
 
         # Create the key for the user
-        hash_input: str = first_name.strip() + last_name.strip() + email.strip() + date_string.strip()
+        hash_input: str = strip_first + strip_last + strip_email + date_string.replace(" ", "")
         encoded_string = hash_input.encode()
         key = hashlib.sha256(encoded_string).hexdigest()
 
         # Create the user model
-        user = User(first_name=first_name.strip(),
-                     last_name=last_name.strip(),
-                       email= email.strip(),
-                       created_at=date_string,
-                       key=key)
+        user = User(first_name=user.first_name,
+                    last_name=user.last_name,
+                    email= user.email,
+                    password= user.password,
+                    created_at=date_string,
+                    key=key,
+                    )
         
         # Create the entity and add it to the database
         user_entity = UserEntity.from_model(user=user)
@@ -69,7 +78,31 @@ class UserService:
         self._session.commit()
 
         # Return the new users key
-        return key
+        return user_entity.to_model()
+    
+    def sign_in(self, email: str, password: str) -> User:
+        """
+        Signs in a user with a given email and password.
+        
+        Args: 
+            email: The email of the user to be signed in.
+            password: The password of the user to be signed in.
+            
+        Returns:
+            key: The key for the newly signed in user.
+            
+        Raises: 
+            UserNotFoundException: if the user is not found in the database."""
+        
+        # Retreive the user from the database.
+        query = select(UserEntity).where(UserEntity.email == email and UserEntity.password == password)
+        entity: UserEntity | None = self._session.scalar(query)
+
+        if entity:
+            # Return the key for the entity.
+            return entity.to_model()
+        else:
+            raise UserNotFoundException()
     
     def get_user(self, key: str) -> User:
         """

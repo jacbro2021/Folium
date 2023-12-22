@@ -8,27 +8,13 @@ Usage: python3 -m script.create_database
 
 import sqlalchemy
 import sys
-from env import getenv
+from ..env import getenv
+from ..database import engine
 
 if getenv("MODE") != "development":
     print("This script can only be run in development mode.", file=sys.stderr)
     print("Add MODE=development to your .env file in workspace's `backend/` directory")
     exit(1)
-
-
-def _engine_str() -> str:
-    """Helper function for reading settings from environment variables to produce connection string."""
-    dialect = "postgresql+psycopg2"
-    user = getenv("POSTGRES_USER")
-    password = getenv("POSTGRES_PASSWORD")
-    host = getenv("POSTGRES_HOST")
-    port = getenv("POSTGRES_PORT")
-    return f"{dialect}://{user}:{password}@{host}:{port}"
-
-
-engine = sqlalchemy.create_engine(_engine_str(), echo=True)
-"""Application-level SQLAlchemy database engine."""
-
 
 with engine.connect() as connection:
     connection.execute(

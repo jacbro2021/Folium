@@ -22,6 +22,8 @@ class UserEntity(EntityBase):
     last_name: Mapped[String] = mapped_column(String, nullable=False)
     # Column to store the users email 
     email: Mapped[String] = mapped_column(String, nullable=False)
+    # Column to store the users password
+    password: Mapped[String] = mapped_column(String, nullable=False)
     # Column to store when the user was created
     created_at: Mapped[str] = mapped_column(String, nullable=False)
     # key for the user to access their own information
@@ -43,6 +45,7 @@ class UserEntity(EntityBase):
             first_name = user.first_name,
             last_name = user.last_name,
             email = user.email,
+            password = user.password,
             created_at = user.created_at,
             key = user.key,
         )
@@ -59,6 +62,7 @@ class UserEntity(EntityBase):
             first_name=self.first_name,
             last_name=self.last_name,
             email=self.email,
+            password=self.password,
             created_at=self.created_at,
             key = self.key,
         )
@@ -73,4 +77,5 @@ class UserEntity(EntityBase):
         self.first_name = user.first_name
         self.last_name = user.last_name
         self.email = user.email
+        self.password = user.password
 
