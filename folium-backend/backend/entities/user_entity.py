@@ -1,12 +1,10 @@
 """Definition of SQLAlchemy backend table entity to represent users."""
 
-from typing import Self
 from .entity_base import EntityBase
-
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String, Date
-
 from ..models.user import User
+from typing import Self
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Integer, String
 
 class UserEntity(EntityBase):
     """Serves as the database model schema defining the shape of the `User` table"""
@@ -28,7 +26,7 @@ class UserEntity(EntityBase):
     created_at: Mapped[str] = mapped_column(String, nullable=False)
     # key for the user to access their own information
     key: Mapped[str] = mapped_column(String, nullable=False)
-    
+
     @classmethod
     def from_model(cls, user: User) -> Self:
         """
@@ -78,4 +76,3 @@ class UserEntity(EntityBase):
         self.last_name = user.last_name
         self.email = user.email
         self.password = user.password
-

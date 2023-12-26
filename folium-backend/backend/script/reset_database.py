@@ -1,6 +1,7 @@
 """Reset Database"""
 
-from ..entities.user_entity import  EntityBase
+from ..entities.entity_base import  EntityBase
+from ..entities.user_entity import UserEntity
 from ..database import engine
 
 EntityBase.metadata.drop_all(engine)

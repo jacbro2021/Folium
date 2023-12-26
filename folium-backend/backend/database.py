@@ -13,11 +13,8 @@ def _engine_str(database=getenv("POSTGRES_DATABASE")) -> str:
     port = getenv("POSTGRES_PORT")
     return f"{dialect}://{user}:{password}@{host}:{port}/{database}"
 
-try:
-    engine = sqlalchemy.create_engine(_engine_str(), echo=True)
-    """Application-level SQLAlchemy database engine."""
-except:
-    print(_engine_str())
+engine = sqlalchemy.create_engine(_engine_str(), echo=True)
+"""Application-level SQLAlchemy database engine."""
 
 
 def db_session():
