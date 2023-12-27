@@ -104,6 +104,7 @@ class UserService:
         else:
             raise UserNotFoundException()
     
+    # TODO: Remove this before launching to production.
     def get_user(self, key: str) -> User:
         """
         Retrieves a user from the database

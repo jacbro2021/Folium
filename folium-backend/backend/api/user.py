@@ -65,6 +65,7 @@ def login(email: str,
     except UserNotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+# TODO: Remove this before launching to production. 
 @api.get("/get/{key}", tags=["User"])
 def get_user(key: str, 
              user_service: UserService = Depends(),) -> User:
