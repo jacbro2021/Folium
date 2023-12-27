@@ -1,8 +1,12 @@
 """Definition of SQLAlchemy backend table to store plant data"""
 
 from .entity_base import EntityBase
+
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import Integer, String, ARRAY, Float, Boolean
+
+from ..models.plant import Plant
+from typing import Self
 
 class PlantEntity(EntityBase):
     """Column definitions for the plant table in the database"""
@@ -37,10 +41,95 @@ class PlantEntity(EntityBase):
     # Description of the plant.
     description: Mapped[str] = mapped_column(String)
     # Url for an image of the plant.
-    image_URL: Mapped[str] = mapped_column(String)
+    image_url: Mapped[str] = mapped_column(String)
     # The key for the owner of the plant.
     owner_key: Mapped[str] = mapped_column(String, nullable=False)
     # Date last watered.
     last_watering: Mapped[str] = mapped_column(String)
     # Health history, where each index is a ranking of the plants health from 1-10.
     health_history: Mapped[list[int]] = mapped_column(ARRAY(Integer))
+
+    @classmethod
+    def from_model(cls, plant: Plant) -> Self:
+        """
+        Convert Plant model to Plant entity
+        
+        Args: 
+            plant: plant model
+            
+        Returns:
+            self
+        """
+        
+        return cls(
+            id = plant.id,
+            common_name = plant.common_name,
+            scientific_name = plant.scientific_name,
+            type = plant.type,
+            cycle = plant.cycle,
+            watering = plant.watering,
+            watering_period = plant.watering_period,
+            watering_benchmark_unit = plant.watering_benchmark_unit,
+            watering_benchmark_value = plant.watering_benchmark_value,
+            sunlight = plant.sunlight,
+            pet_poison = plant.pet_poisson,
+            human_poison = plant.human_poisson,
+            description = plant.description,
+            image_url = plant.image_url,
+            owner_key = plant.owner_key,
+            last_watering = plant.last_watering,
+            health_history = plant.health_history,
+        )
+    
+    def to_model(self) -> Plant:
+        """
+        Convert plant entity to plant model.
+            
+        Returns:
+            Plant: model representation of self.
+        """
+
+        return Plant(
+            id = self.id,
+            common_name = self.common_name,
+            scientific_name = self.scientific_name,
+            type = self.type,
+            cycle = self.cycle,
+            watering = self.watering,
+            watering_period = self.watering_period,
+            watering_benchmark_unit = self.watering_benchmark_unit,
+            watering_benchmark_value = self.watering_benchmark_value,
+            sunlight = self.sunlight,
+            pet_poison = self.pet_poison,
+            human_poison = self.human_poison,
+            description = self.description,
+            image_url = self.image_url,
+            owner_key = self.owner_key,
+            last_watering = self.last_watering,
+            health_history = self.health_history,
+        )
+    
+    def update(self, plant: Plant) -> None:
+        """
+        Updates self using a provided plant model.
+        
+        Args:
+            plant: the plant model to update with.
+        """
+
+        self.common_name = plant.common_name
+        self.scientific_name = plant.scientific_name
+        self.type = plant.type
+        self.cycle = plant.cycle
+        self.watering = plant.watering
+        self.watering_period = plant.watering_period
+        self.watering_benchmark_value = plant.watering_benchmark_value
+        self.watering_benchmark_unit = plant.watering_benchmark_unit
+        self.sunlight = plant.sunlight
+        self.pet_poison = plant.pet_poisson
+        self.human_poison = plant.human_poisson
+        self.description = plant.description
+        self.image_url = plant.image_url
+        self.owner_key = plant.owner_key
+        self.last_watering = plant.last_watering
+        self.health_history = plant.health_history
