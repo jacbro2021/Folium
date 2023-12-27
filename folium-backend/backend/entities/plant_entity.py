@@ -2,7 +2,7 @@
 
 from .entity_base import EntityBase
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String, ARRAY, Float
+from sqlalchemy import Integer, String, ARRAY, Float, Boolean
 
 class PlantEntity(EntityBase):
     """Column definitions for the plant table in the database"""
@@ -14,33 +14,33 @@ class PlantEntity(EntityBase):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     # Common name for the plant.
     common_name: Mapped[str] = mapped_column(String)
-    # The slug for the plant.
-    slug: Mapped[str] = mapped_column(String)
-    # The scientific name for the plant.
+    # Scientific name for the plant.
     scientific_name: Mapped[str] = mapped_column(String)
-    # Plant image URL.
-    image_url: Mapped[str] = mapped_column(String)
-    # The life cycle of the plant.
-    duration: Mapped[list[str]] = mapped_column(ARRAY(String))
-    # Relative growth rate of the plant (compared to other plants).
-    growth_rate: Mapped[str] = mapped_column(String)
-    # The predominant shape of the species.
-    shape_and_orientation: Mapped[str] = mapped_column(String)
-    # Description of how the plant typically grows.
-    growth_description: Mapped[str] = mapped_column(String)
-    # Max soil PH.
-    ph_maximum: Mapped[float] = mapped_column(Float)
-    # Min soil PH.
-    ph_minimum: Mapped[float] = mapped_column(Float)
-    # The amount of light required for the plant on a scale of 1-10
-    light: Mapped[int] = mapped_column(Integer)
-    # Min precipitation per year in mm.
-    minimum_precipitation: Mapped[float] = mapped_column(Float)
-    # Max precipitation per year in mm.
-    maximum_precipitation: Mapped[float] = mapped_column(Float)
-    # Health history with rankings 1-10
-    health_history: Mapped[list[int]] = mapped_column(ARRAY(Integer))
-    # Number of days in a row that the plant has met its watering reqs.
-    watering_streak: Mapped[int] = mapped_column(Integer, nullable=False)
-    # The key  of the plants owner.
+    # Type of plant.
+    type: Mapped[str] = mapped_column(String)
+    # The plants cycle.
+    cycle: Mapped[str] = mapped_column(String)
+    # The frequency that that the plant should be watered.
+    watering: Mapped[str] = mapped_column(String)
+    # The time of day that the plant should be watered.
+    watering_period: Mapped[str] = mapped_column(String)
+    # The amount of time that should pass between the plant being watered.
+    watering_benchmark_value: Mapped[str] = mapped_column(String)
+    # The unit for the watering benchmark value.
+    watering_benchmark_unit: Mapped[str] = mapped_column(String)
+    # The amount of sunlight that the plant should get.
+    sunlight: Mapped[str] = mapped_column(String)
+    # true/false poisonous to pets.
+    pet_poison: Mapped[bool] = mapped_column(Boolean)
+    # True/false poisonous to humans.
+    human_poison: Mapped[bool] = mapped_column(Boolean)
+    # Description of the plant.
+    description: Mapped[str] = mapped_column(String)
+    # Url for an image of the plant.
+    image_URL: Mapped[str] = mapped_column(String)
+    # The key for the owner of the plant.
     owner_key: Mapped[str] = mapped_column(String, nullable=False)
+    # Date last watered.
+    last_watering: Mapped[str] = mapped_column(String)
+    # Health history, where each index is a ranking of the plants health from 1-10.
+    health_history: Mapped[list[int]] = mapped_column(ARRAY(Integer))
