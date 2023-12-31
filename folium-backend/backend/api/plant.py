@@ -66,7 +66,7 @@ def create_plant(plant: Plant,
     
 @api.put(path="/update_plant", tags=["Plant"])
 def update_plant(plant: Plant,
-                 plant_service: PlantService = Depends(),) -> Plant:
+                 plant_service: PlantService = Depends()) -> Plant:
     """
     Updates and returns a plant that is already in the database.
 
@@ -82,7 +82,7 @@ def update_plant(plant: Plant,
     """
 
     try:
-        plant_service.update_Plant(plant=plant)
+        return plant_service.update_Plant(plant=plant)
     except (UserNotFoundException, PlantNotFoundException) as e:
         raise HTTPException(status_code=404, detail=str(e))
     except (UserBlankKeyException, PlantBlankIdException) as e:

@@ -3,13 +3,13 @@
 from .entity_base import EntityBase
 
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String, ARRAY, Float, Boolean
+from sqlalchemy import Integer, String, ARRAY, Boolean
 
 from ..models.plant import Plant
 from typing import Self
 
 class PlantEntity(EntityBase):
-    """Column definitions for the plant table in the database"""
+    """Serves as the database model schema defining the shape of the 'plant' table."""
 
     # The name of the table in the database.
     __tablename__ = "plant"
