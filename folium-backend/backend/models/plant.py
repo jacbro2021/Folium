@@ -1,8 +1,8 @@
 """Plant model serves as the data object for representing plants across application layers."""
 
-from fastapi import Basemodel
+from pydantic import BaseModel
 
-class PlantIdentity(Basemodel):
+class PlantIdentity(BaseModel):
     """
     Pydantic model to represent how 'plants' are 
     represented in the system.
@@ -13,7 +13,7 @@ class PlantIdentity(Basemodel):
 
     id: int | None = None
 
-class Plant(PlantIdentity, Basemodel):
+class Plant(PlantIdentity, BaseModel):
     """
     Pydantic model to represent how 'plants' are 
     represented in the system.
@@ -27,7 +27,7 @@ class Plant(PlantIdentity, Basemodel):
     type: str = ""
     cycle: str = ""
     watering: str = ""
-    watering_period = ""
+    watering_period: str = ""
     watering_benchmark_value: str = ""
     watering_benchmark_unit: str = ""
     sunlight: str = ""
