@@ -1,6 +1,7 @@
 """Class to hold all exceptions for the various services"""
 
 from ..entities.user_entity import UserEntity
+from ..models.plant import Plant
 
 class DuplicateUserException(Exception):
     """Exception to be thrown when a new account is created with an email that is already being used for another user."""
@@ -21,4 +22,11 @@ class UserNotFoundException(Exception):
     def __init__(self):
         super().__init__(
             "User not found."
+        )
+
+class PlantNotFoundException(Exception):
+    """Exception to be thrown when the database is queried for a plant that does not exist."""
+    def __init__(self, plant: Plant):
+        super().__init__(
+            f"Plant {plant.common_name} not found for owner with that key."
         )

@@ -62,7 +62,6 @@ class PlantEntity(EntityBase):
         """
         
         return cls(
-            id = plant.id,
             common_name = plant.common_name,
             scientific_name = plant.scientific_name,
             type = plant.type,
