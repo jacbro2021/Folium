@@ -3,22 +3,23 @@
 from sqlalchemy.orm import Session
 from .reset_table_id_seq import reset_table_id_seq
 
-from ..entities.plant_entity import PlantEntity
+from ..models.user import User
 from ..entities.user_entity import UserEntity
+from ..models.plant import Plant
+from ..entities.plant_entity import PlantEntity
 
-from datetime import datetime
-
-user1: UserEntity = UserEntity(
+user1 = User(
     id=0,
-    first_name="Jacob",
-    last_name="Brown",
-    email="jacobbrown@gmail.com",
-    password="password",
+    first_name="jacob",
+    last_name="brown",
+    email="test@gmail.com",
+    password="test",
     created_at="",
     key="user1"
 )
 
-user2: UserEntity = UserEntity(
+user2 = User(
+    id=1,
     first_name="Lebron",
     last_name="James",
     email="SecondGreatestOfAllTime@hotmail.com",
@@ -27,9 +28,9 @@ user2: UserEntity = UserEntity(
     key="user2"
 )
 
-plant1 = PlantEntity(
+plant1 = Plant(
     id=0,
-    common_name="fake",
+    common_name="test1",
     scientific_name="fake",
     type="fake",
     cycle="fake",
@@ -47,9 +48,9 @@ plant1 = PlantEntity(
     health_history=list(),
 )
 
-plant2 = PlantEntity(
+plant2 = Plant(
     id=1,
-    common_name="fake",
+    common_name="test2",
     scientific_name="fake",
     type="fake",
     cycle="fake",
@@ -76,11 +77,16 @@ def insert_test_data(session: Session):
     
     # Add users to db.
     for user in users:
-        session.add(user)
+        new_user = UserEntity.from_model(user=user)
+        session.add(new_user)
 
     # Add plants to db.
     for plant in plants:
-        session.add(plant)
+        new_plant = PlantEntity.from_model(plant=plant)
+        session.add(new_plant)
 
-    reset_table_id_seq(session=session, entity=PlantEntity, entity_id_column=PlantEntity.id, next_id=len(plants))
+    ent = session.query(UserEntity).all()
+
+    reset_table_id_seq(session=session, entity=UserEntity, entity_id_column=UserEntity.id, next_id=len(users) + 1)
+    reset_table_id_seq(session=session, entity=PlantEntity, entity_id_column=PlantEntity.id, next_id=len(plants) + 1)
 

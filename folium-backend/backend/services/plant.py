@@ -45,6 +45,7 @@ class PlantService:
         if user_entity is None:
             raise UserNotFoundException()
         
+        
     def __find_plant_entity(self, plant_id: int, owner_key: str) -> PlantEntity:
         """
         Helper method that either retrieves a plant from the database or raises an exception.

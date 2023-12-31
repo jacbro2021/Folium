@@ -12,16 +12,12 @@ from ..services.exceptions import (UserNotFoundException,
 from ..services.plant import PlantService
 from ..models.plant import Plant
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True, scope="function")
 def plant_service(session: Session):
     """This PyTest fixture is injected into each test parameter of the same name below.
     It constructs a new, empty PlantService object."""
-
-    # Insert fake data and commit session.
-    insert_test_data(session=session)
+    insert_test_data(session)
     session.commit()
-
-    # Create service instance.
     plant_service = PlantService(session=session)
     return plant_service
 
@@ -30,14 +26,15 @@ def test_get_all_user_plants(plant_service: PlantService):
 
     plants = plant_service.get_all_user_plants("user1")
     assert len(plants) == 1
-    assert plants[0].id == 0
+    assert plants[0].common_name == "test1"
+
 
 def test_get_all_user_plants_correct_plants(plant_service: PlantService):
     """Test that get all user plants service method returns the correct plants"""
 
-    plants = plant_service.get_all_user_plants("user2")
+    plants = plant_service.get_all_user_plants("user1")
     assert len(plants) == 1
-    assert plants[0].id != 0
+    assert plants[0].common_name != "test2"
 
 def test_get_all_user_plants_nonexistent_user(plant_service: PlantService):
     """Test that an exception is thrown when a nonexistent user is input"""
@@ -102,9 +99,11 @@ def test_create_plant_nonexistent_owner(plant_service: PlantService):
 def test_remove_plant(plant_service: PlantService):
     """Tests basic functionality of remove plant service method."""
 
-    plant = Plant(id=0, owner_key="user1")
+    plant = Plant(owner_key="user1")
+    plant = plant_service.create_plant(plant=plant)
+    assert len(plant_service.get_all_user_plants("user1")) == 2
     plant_service.remove_plant(plant=plant)
-    assert plant_service.get_all_user_plants("user1") == []
+    assert len(plant_service.get_all_user_plants("user1")) == 1
 
 def test_remove_other_user_plant(plant_service: PlantService):
     """Tests that a user cannot remove another users plants."""
@@ -149,8 +148,10 @@ def test_update_plant(plant_service: PlantService):
     """Test basic usage of update plant service method."""
 
     plant = Plant(id=0, common_name="not fake", owner_key="user1")
-    plant = plant_service.update_Plant(plant=plant)
-    assert plant.common_name == "not fake"
+    plant = plant_service.create_plant(plant=plant)
+    plant.common_name = "super fake"
+    updated_plant = plant_service.update_Plant(plant=plant)
+    assert updated_plant.common_name == "super fake"
 
 def test_update_plant_nonexistent_owner(plant_service: PlantService):
     """Test that an exception is raised when a plant is updated with a nonexistent owner."""
