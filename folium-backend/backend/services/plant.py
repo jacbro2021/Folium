@@ -11,7 +11,9 @@ from ..models.user import User
 from ..entities.user_entity import UserEntity
 
 from .exceptions import (UserNotFoundException,
-                         PlantNotFoundException)
+                         PlantNotFoundException,
+                         UserBlankKeyException,
+                         PlantBlankIdException,)
 
 class PlantService:
     """Plant service to perform actions on the plant table."""
@@ -28,7 +30,12 @@ class PlantService:
             key: the key of the user to search for.
             
         Raises:
+            UserBlankKeyException: If the key arg is empty.
             UserNotFoundException: If the user is not found."""
+        
+        # If the key is empty raise exception
+        if key == "":
+            raise UserBlankKeyException()
         
         # Check that a user exists for the given key.
         query = select(UserEntity).where(UserEntity.key == key)
@@ -50,16 +57,23 @@ class PlantService:
             PlantEntity: The Entity representation of the retrieved plant.
         
         Raises:
+            PlantBlankIdException: If the plants ID is blank.
             PlantNotFoundException: If the plant is not found in the database.
         """
 
+        # If plant_id is empty, raise exception
+        if plant_id == "":
+            raise PlantBlankIdException()
+
          # Query the database to find the plant to be deleted.
-        query = select(PlantEntity).where(PlantEntity.id == plant_id and PlantEntity.owner_key == owner_key)
+        query = select(PlantEntity).where(PlantEntity.id == plant_id)
         plant_entity: PlantEntity | None = self._session.scalar(query)
 
         # If not plant found, raise error. 
-        if plant_entity == None:
+        if plant_entity == None or plant_entity.owner_key != owner_key:
             raise PlantNotFoundException()
+        else:
+            return plant_entity
 
     def get_all_user_plants(self, key: str) -> list[Plant]:
         """
@@ -73,6 +87,7 @@ class PlantService:
 
         Raises:
             UserNotFoundException: If a user is not found for the provided key.
+            UserBlankKeyException: If the key arg is empty.
         """
 
         # Check that a user exists for the given key.
@@ -102,6 +117,7 @@ class PlantService:
 
         Raises:
             UserNotFoundException: If the plant's owner key does not belong to a user in the user table.
+            UserBlankKeyException: If the key arg is empty.
         """
 
         # Check that a user exists for the given key.
@@ -126,14 +142,16 @@ class PlantService:
 
         Raises:
             UserNotfoundException: If the user with the respective key is not found.
+            UserBlankKeyException: If the key arg is empty.
             PlantNotFoundException: If the plant with the given id is not found in the database.
+            PlantBlankIdException: If the plants ID is blank.
         """
 
         # Query the database to find the owner of the plant.
         self.__identify_user(key=plant.owner_key)
         
         # Query the database to find the plant to be deleted.
-        plant_entity = self.__find_plant_entity(plant)
+        plant_entity = self.__find_plant_entity(plant_id=plant.id, owner_key=plant.owner_key)
         
         # Delete plant from database and return. 
         self._session.delete(plant_entity)
@@ -153,13 +171,15 @@ class PlantService:
 
         Raises:
             UserNotfoundException: If the user with the respective key is not found.
+            UserBlankKeyException: If the key arg is empty.
             PlantNotFoundException: If the plant with the given id is not found in the database.
+            PlantBlankIdException: If the plants ID is blank.
         """
         # Query the database to find the owner of the plant.
         self.__identify_user(plant.owner_key)
         
         # Query the database to find the plant to be deleted.
-        plant_entity = self.__find_plant_entity(plant)
+        plant_entity = self.__find_plant_entity(plant_id=plant.id, owner_key=plant.owner_key)
         
         # Update the plant entity and commit the changes.
         plant_entity.update(plant=plant)

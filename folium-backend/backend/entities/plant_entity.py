@@ -71,8 +71,8 @@ class PlantEntity(EntityBase):
             watering_benchmark_unit = plant.watering_benchmark_unit,
             watering_benchmark_value = plant.watering_benchmark_value,
             sunlight = plant.sunlight,
-            pet_poison = plant.pet_poisson,
-            human_poison = plant.human_poisson,
+            pet_poison = plant.pet_poison,
+            human_poison = plant.human_poison,
             description = plant.description,
             image_url = plant.image_url,
             owner_key = plant.owner_key,
@@ -125,10 +125,9 @@ class PlantEntity(EntityBase):
         self.watering_benchmark_value = plant.watering_benchmark_value
         self.watering_benchmark_unit = plant.watering_benchmark_unit
         self.sunlight = plant.sunlight
-        self.pet_poison = plant.pet_poisson
-        self.human_poison = plant.human_poisson
+        self.pet_poison = plant.pet_poison
+        self.human_poison = plant.human_poison
         self.description = plant.description
         self.image_url = plant.image_url
-        self.owner_key = plant.owner_key
         self.last_watering = plant.last_watering
         self.health_history = plant.health_history

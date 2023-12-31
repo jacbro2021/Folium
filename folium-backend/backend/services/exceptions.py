@@ -24,9 +24,23 @@ class UserNotFoundException(Exception):
             "User not found."
         )
 
+class UserBlankKeyException(Exception):
+    """Exception to be thrown when an empty key is passed to be checked in the database."""
+    def __init__(self):
+        super().__init__(
+            "Empty key passed. Owner key must be populated."
+        )
+
 class PlantNotFoundException(Exception):
     """Exception to be thrown when the database is queried for a plant that does not exist."""
-    def __init__(self, plant: Plant):
+    def __init__(self):
         super().__init__(
-            f"Plant {plant.common_name} not found for owner with that key."
+            f"Plant not found."
+        )
+
+class PlantBlankIdException(Exception):
+    """Exception to be thrown when an empty Id is passed to be checked in the database."""
+    def __init__(self):
+        super().__init__(
+            "Empty ID passed. Plant ID field must be populated."
         )

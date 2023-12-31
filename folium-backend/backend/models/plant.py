@@ -31,8 +31,8 @@ class Plant(PlantIdentity, BaseModel):
     watering_benchmark_value: str = ""
     watering_benchmark_unit: str = ""
     sunlight: str = ""
-    pet_poisson: bool = False
-    human_poisson: bool = False
+    pet_poison: bool = False
+    human_poison: bool = False
     description: str = ""
     image_url: str = ""
     owner_key: str = ""
