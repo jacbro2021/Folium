@@ -11,7 +11,7 @@ from ..services.exceptions import (InvalidCredentialsUserException,
 api = APIRouter(prefix="/user")
 openapi_tags = {
     "name":"User",
-    "description":"Routes to interact with API User functionality."   
+    "description":"Routes to interact with User API functionality."   
 }
 
 @api.post("/create", tags=["User"])

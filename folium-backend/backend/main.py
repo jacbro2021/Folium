@@ -6,8 +6,9 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from .api import (
     user,
+    plant
 )
-from .api import user
+
 from .database import _engine_str
 
 description = """
@@ -21,12 +22,14 @@ app = FastAPI(
     description=description,
     openapi_tags=[
         user.openapi_tags,
+        plant.openapi_tags,
     ],
 )
 
 # Plugging in each of the router APIs
 feature_apis = [
-    user
+    user,
+    plant,
 ]
 
 for feature_api in feature_apis:
