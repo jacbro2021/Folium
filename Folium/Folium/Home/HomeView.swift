@@ -26,7 +26,9 @@ struct HomeView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink {} label: {
+                    NavigationLink {
+                        SearchView()
+                    } label: {
                         Image(systemName: "plus")
                     }
                     .foregroundStyle(.primary)
