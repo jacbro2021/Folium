@@ -15,73 +15,25 @@ enum SearchLoadingState {
     case error(err: String)
 }
 
+@MainActor
 class SearchViewModel: ObservableObject {
     
     // Published variable used to configure the search.
     @Published var speciesName: String = ""
     // Published variable used to store the current loading state for the search module.
     @Published var loadingState: SearchLoadingState = .idle
-
-    init() {
-        loadingState = .success(plantList: self.TestPlants())
-    }
+    // Service to make calls to the Perenual API.
+    private var service = SearchService()
     
     func searchPlants() {
-        // TODO: 
-    }
-    
-    func TestPlants() -> PlantSearchList {
-        return PlantSearchList(plants: [
-            PlantSearchResult(id: 0,
-                              commonName: "Cactus",
-                              scientificName: ["Cacti"],
-                              otherName: [],
-                              cycle: "Perunial",
-                              watering: "Frequent",
-                              sunlight: ["Full Sunlight"],
-                              defaultImage: PlantImage(imageID: 0,
-                                                       license: 0,
-                                                       licenseName: "",
-                                                       licenseURL: "",
-                                                       originalURL: "https://cdn.atwilltech.com/flowerdatabase/s/snake-plant-house-plant-PL112722.425.jpg",
-                                                       regularURL: "",
-                                                       mediumURL: "",
-                                                       smallURL: "",
-                                                       thumbnail: "")),
-            
-            PlantSearchResult(id: 1,
-                              commonName: "Cactus",
-                              scientificName: ["Cacti"],
-                              otherName: [],
-                              cycle: "Perunial",
-                              watering: "Frequent",
-                              sunlight: ["Full Sunlight"],
-                              defaultImage: PlantImage(imageID: 0,
-                                                       license: 0,
-                                                       licenseName: "",
-                                                       licenseURL: "",
-                                                       originalURL: "https://cdn.atwilltech.com/flowerdatabase/s/snake-plant-house-plant-PL112722.425.jpg",
-                                                       regularURL: "",
-                                                       mediumURL: "",
-                                                       smallURL: "",
-                                                       thumbnail: "")),
-            
-            PlantSearchResult(id: 2,
-                              commonName: "Cactus",
-                              scientificName: [],
-                              otherName: [],
-                              cycle: "Perunial",
-                              watering: "Frequent",
-                              sunlight: ["Full Sunlight"],
-                              defaultImage: PlantImage(imageID: 0,
-                                                       license: 0,
-                                                       licenseName: "",
-                                                       licenseURL: "",
-                                                       originalURL: "https://cdn.atwilltech.com/flowerdatabase/s/snake-plant-house-plant-PL112722.425.jpg",
-                                                       regularURL: "",
-                                                       mediumURL: "",
-                                                       smallURL: "",
-                                                       thumbnail: "")),
-        ])
+        self.loadingState = .loading
+        Task {
+            do {
+                self.loadingState = .success(plantList: try await service.fetchPlants(speciesName: speciesName))
+            } catch {
+                self.loadingState = .error(err: error.localizedDescription)
+                print(error)
+            }
+        }
     }
 }

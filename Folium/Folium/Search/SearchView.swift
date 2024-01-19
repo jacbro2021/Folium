@@ -60,28 +60,9 @@ struct SearchView: View {
     
     @ViewBuilder private func SuccessView(plantList: PlantSearchList) -> some View {
         List {
-            ForEach(plantList.plants) { plant in
+            ForEach(plantList.data) { plant in
                 NavigationLink {} label: {
-                    HStack {
-                        AsyncImage(url: URL(string: plant.defaultImage.originalURL)) { image in
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 60)
-                        } placeholder: {
-                            ProgressView()
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text(plant.commonName)
-                                .bold()
-                                .font(.title2)
-                                .padding(.vertical, 3)
-                            Text(plant.scientificName.first ?? "")
-                                .font(.callout)
-                                .fontWeight(.thin)
-                        }
-                    }
+                    Text(plant.commonName)
                 }
             }
         }

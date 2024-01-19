@@ -8,26 +8,25 @@
 import Foundation
 
 // MARK: Models for the 'Search' feature.
-struct PlantSearchList {
-    let plants: [PlantSearchResult]
+struct PlantSearchList: Codable {
+    let data: [PlantSearchResult]
 }
 
-struct PlantSearchResult: Identifiable {
+struct PlantSearchResult: Codable, Identifiable {
     let id: Int
     let commonName: String
     let scientificName: [String]
-    let otherName: [String]?
-    let cycle, watering: String
-    let sunlight: [String]?
-    let defaultImage: PlantImage
+    let cycle: String?
+    let defaultImage: PlantImage?
 }
 
-struct PlantImage {
-    let imageID, license: Int
-    let licenseName: String
-    let licenseURL: String
-    let originalURL, regularURL, mediumURL, smallURL: String
-    let thumbnail: String
+struct PlantImage: Codable {
+    let originalUrl, regularUrl, mediumUrl, smallUrl: String?
+}
+
+enum Watering: String {
+    case average
+    case frequent
 }
 
 // MARK: Models for the  'PlantDetails' feature/view.

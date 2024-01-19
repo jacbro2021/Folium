@@ -16,6 +16,7 @@
 		48C8655D2B5AD2F100ED9B18 /* Perenual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C8655C2B5AD2F100ED9B18 /* Perenual.swift */; };
 		48C8655F2B5AD90800ED9B18 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C8655E2B5AD90800ED9B18 /* SearchView.swift */; };
 		48C865612B5ADA1C00ED9B18 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C865602B5ADA1C00ED9B18 /* SearchViewModel.swift */; };
+		48C865642B5AF63500ED9B18 /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C865632B5AF63500ED9B18 /* SearchService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,8 @@
 		48C8655C2B5AD2F100ED9B18 /* Perenual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Perenual.swift; sourceTree = "<group>"; };
 		48C8655E2B5AD90800ED9B18 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		48C865602B5ADA1C00ED9B18 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		48C865622B5AF57900ED9B18 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		48C865632B5AF63500ED9B18 /* SearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +64,7 @@
 		489EF1222B4B93E300442A31 /* Folium */ = {
 			isa = PBXGroup;
 			children = (
+				48C865622B5AF57900ED9B18 /* Info.plist */,
 				489EF1232B4B93E300442A31 /* FoliumApp.swift */,
 				489EF1252B4B93E300442A31 /* ContentView.swift */,
 				48C8655B2B5AD0CE00ED9B18 /* Shared */,
@@ -94,6 +98,7 @@
 			children = (
 				48C8655E2B5AD90800ED9B18 /* SearchView.swift */,
 				48C865602B5ADA1C00ED9B18 /* SearchViewModel.swift */,
+				48C865632B5AF63500ED9B18 /* SearchService.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -181,6 +186,7 @@
 				489EF1262B4B93E300442A31 /* ContentView.swift in Sources */,
 				48C8655D2B5AD2F100ED9B18 /* Perenual.swift in Sources */,
 				489EF1242B4B93E300442A31 /* FoliumApp.swift in Sources */,
+				48C865642B5AF63500ED9B18 /* SearchService.swift in Sources */,
 				48C8655F2B5AD90800ED9B18 /* SearchView.swift in Sources */,
 				489EF1352B4B94A100442A31 /* HomeViewModel.swift in Sources */,
 			);
@@ -319,6 +325,7 @@
 				DEVELOPMENT_TEAM = JF3C4XP9N2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Folium/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -348,6 +355,7 @@
 				DEVELOPMENT_TEAM = JF3C4XP9N2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Folium/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
