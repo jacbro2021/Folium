@@ -62,7 +62,38 @@ struct SearchView: View {
         List {
             ForEach(plantList.data) { plant in
                 NavigationLink {} label: {
-                    Text(plant.commonName)
+                    HStack {
+                        if let imageUrl = plant.defaultImage?.originalUrl {
+                            AsyncImage(url: URL(string: imageUrl)) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 60, height: 60)
+                            } placeholder: {
+                                Image("plant")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 60, height: 60)
+                            }
+                        } else {
+                            Image("plant")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 60, height: 60)
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            Text(plant.commonName)
+                                .bold()
+                                .padding(.vertical, 3)
+                                .lineLimit(1)
+                            Text(plant.scientificName.first ?? "")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                        }
+                        .padding(.horizontal)
+                    }
                 }
             }
         }

@@ -32,33 +32,27 @@ class SearchService {
         guard var urlComponent = URLComponents(string: "https://perenual.com/api/species-list") else {
             fatalError("Failed to create URL component.")
         }
-       
+        
         // Add the api key to the url as a query parameter.
         urlComponent.queryItems = [
             URLQueryItem(name: "key", value: self.key),
             URLQueryItem(name: "q", value: speciesName)
         ]
-       
+        
         // Extract the url from the url component.
         guard let url = urlComponent.url else {
             fatalError("Invalid URL for fetch plantas method.")
         }
-       
+        
         // Create and configure the url request.
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "accept")
-       
+        
         // Make the network call and decode the response.
         let (data, _) = try await session.data(for: request)
         let plantList = try decoder.decode(PlantSearchList.self, from: data)
-      
+        
         return plantList
-    }
-   
-    // MARK: Method for testing networking calls
-    func printData(data: Data) {
-        let str = String(bytes: data, encoding: .utf8)!
-        print(str)
     }
 }

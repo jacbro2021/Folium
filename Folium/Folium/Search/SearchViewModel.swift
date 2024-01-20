@@ -32,7 +32,6 @@ class SearchViewModel: ObservableObject {
                 self.loadingState = .success(plantList: try await service.fetchPlants(speciesName: speciesName))
             } catch {
                 self.loadingState = .error(err: error.localizedDescription)
-                print(error)
             }
         }
     }

@@ -21,7 +21,7 @@ struct PlantSearchResult: Codable, Identifiable {
 }
 
 struct PlantImage: Codable {
-    let originalUrl, regularUrl, mediumUrl, smallUrl: String?
+    let originalUrl: String
 }
 
 enum Watering: String {
